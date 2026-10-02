@@ -1,0 +1,422 @@
+<title>Seguimiento Guías 3, 4 y 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: hero ring + KPI strip, then guide progress, evidence grid, roster list, pendientes cards */
+:root{
+  --bg:#fafafa; --surface:#ffffff; --surface-2:#f3f4f6; --border:#e8e9ec;
+  --ink:#14151a; --ink-dim:#6b6f7a; --ink-faint:#9a9ea8;
+  --accent:#4338ca; --accent-soft:#eef0fd; --accent-strong:#312b9e;
+  --good:#0f9960; --good-soft:#e6f6ee;
+  --warn:#c2770a; --warn-soft:#fdf1df;
+  --bad:#d23f3f; --bad-soft:#fde9e9;
+  --ring-track:#eceef3;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1012; --surface:#17181c; --surface-2:#1f2125; --border:#2a2c32;
+    --ink:#eef0f5; --ink-dim:#9a9ea8; --ink-faint:#6b6f7a;
+    --accent:#8b85f0; --accent-soft:#201f3d; --accent-strong:#a6a0ff;
+    --good:#4ad397; --good-soft:#133227;
+    --warn:#e3a84f; --warn-soft:#352a16;
+    --bad:#ef7373; --bad-soft:#3a1f1f;
+    --ring-track:#26272e;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1012; --surface:#17181c; --surface-2:#1f2125; --border:#2a2c32;
+  --ink:#eef0f5; --ink-dim:#9a9ea8; --ink-faint:#6b6f7a;
+  --accent:#8b85f0; --accent-soft:#201f3d; --accent-strong:#a6a0ff;
+  --good:#4ad397; --good-soft:#133227;
+  --warn:#e3a84f; --warn-soft:#352a16;
+  --bad:#ef7373; --bad-soft:#3a1f1f;
+  --ring-track:#26272e;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  padding:0 20px; padding-block:32px 72px;
+}
+.wrap{max-width:1180px;margin:0 auto}
+.disp{font-family:'Space Grotesk',sans-serif}
+.num{font-variant-numeric:tabular-nums}
+h1,h2,h3{text-wrap:balance;margin:0}
+
+/* ---------- Hero ---------- */
+.hero{
+  display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center;
+  background:var(--surface);border:1px solid var(--border);border-radius:20px;
+  padding:28px 32px;margin-bottom:20px;
+}
+@media (max-width:680px){ .hero{grid-template-columns:1fr;text-align:center} }
+
+.ring-wrap{position:relative;width:132px;height:132px;flex-shrink:0;margin:0 auto}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:var(--ring-track);stroke-width:12}
+.ring-fill{fill:none;stroke:var(--accent);stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 1s ease}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-center .big{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;line-height:1;color:var(--ink)}
+.ring-center .small{font-size:10.5px;color:var(--ink-faint);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-top:3px}
+
+.hero-text .eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.hero-text h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,3vw,28px);font-weight:700;margin-top:6px}
+.hero-text p{color:var(--ink-dim);font-size:13.5px;margin-top:8px;line-height:1.65;max-width:620px}
+.hero-text p b{color:var(--ink);font-weight:600}
+
+/* ---------- KPI strip ---------- */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
+.kpi{
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:18px 20px;min-width:0;position:relative;overflow:hidden;
+}
+.kpi::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:var(--kpi-c,var(--accent))}
+.kpi-label{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
+.kpi-value{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;margin-top:7px;line-height:1;color:var(--kpi-c,var(--ink))}
+.kpi-sub{font-size:12px;color:var(--ink-dim);margin-top:6px;line-height:1.4}
+.kpi.c-good{--kpi-c:var(--good)}
+.kpi.c-accent{--kpi-c:var(--accent)}
+.kpi.c-warn{--kpi-c:var(--warn)}
+
+@media (max-width:760px){ .kpi-row{grid-template-columns:repeat(2,1fr)} }
+
+/* ---------- Section shell ---------- */
+.section{margin-bottom:30px}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.section-head h2{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700}
+.section-head .hint{font-size:12px;color:var(--ink-faint);font-weight:500}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.card-pad{padding:20px 24px}
+
+/* ---------- Guide progress ---------- */
+.guide-row{display:flex;align-items:center;gap:16px;padding:16px 24px;border-bottom:1px solid var(--border)}
+.guide-row:last-child{border-bottom:none}
+.guide-name{width:160px;flex-shrink:0;font-size:13.5px;font-weight:600}
+.guide-name small{display:block;font-weight:500;color:var(--ink-faint);font-size:11px;margin-top:2px}
+.guide-bar-track{flex:1;min-width:0;height:8px;background:var(--surface-2);border-radius:5px;overflow:hidden}
+.guide-bar-fill{height:100%;border-radius:5px;transition:width 1s ease}
+.guide-pct{width:52px;flex-shrink:0;text-align:right;font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700}
+.guide-frac{width:68px;flex-shrink:0;text-align:right;font-size:11.5px;color:var(--ink-faint)}
+
+/* ---------- Evidence bars (Guía 5) ---------- */
+.ev-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;padding:22px 24px}
+@media (max-width:680px){ .ev-grid{grid-template-columns:repeat(4,1fr)} }
+.ev-item{display:flex;flex-direction:column;align-items:center;gap:8px}
+.ev-track{width:100%;height:84px;background:var(--surface-2);border-radius:8px;display:flex;align-items:flex-end;overflow:hidden;position:relative}
+.ev-fill{width:100%;border-radius:8px 8px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:6px;transition:height .8s ease}
+.ev-fill span{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:#fff}
+.ev-label{font-size:10.5px;font-weight:700;color:var(--ink-dim)}
+.ev-sub{font-size:9.5px;color:var(--ink-faint);text-align:center;line-height:1.3;max-width:68px}
+
+/* ---------- Roster table ---------- */
+.roster-scroll{overflow-x:auto}
+table.roster{border-collapse:collapse;width:100%;font-size:13.5px;min-width:620px}
+table.roster th,table.roster td{padding:13px 16px;border-bottom:1px solid var(--border);text-align:left}
+table.roster thead th{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);background:var(--surface-2)}
+table.roster thead th.num{text-align:center}
+table.roster td.num{text-align:center;font-variant-numeric:tabular-nums;font-weight:600}
+table.roster tbody tr:last-child td{border-bottom:none}
+table.roster tbody tr:hover{background:var(--surface-2)}
+.rank{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--ink-faint);font-size:13px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.pill.complete{background:var(--good-soft);color:var(--good)}
+.pill.attention{background:var(--warn-soft);color:var(--warn)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* ---------- Pendientes ---------- */
+.pend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.pend-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px}
+.pend-card.risk{border-color:color-mix(in srgb, var(--warn) 45%, var(--border));background:var(--warn-soft)}
+.pend-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.pend-head .name{font-size:13.5px;font-weight:700}
+.pend-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:10.5px;padding:4px 9px;border-radius:7px;background:var(--surface-2);color:var(--ink-dim);font-weight:700}
+.tag.g4{background:color-mix(in srgb, var(--accent) 16%, var(--surface-2));color:var(--accent)}
+.tag.g5{background:color-mix(in srgb, var(--bad) 14%, var(--surface-2));color:var(--bad)}
+
+/* ---------- RAP SOFIA ---------- */
+.rap-guide{margin-bottom:18px}
+.rap-guide:last-child{margin-bottom:0}
+.rap-guide-head{display:flex;align-items:baseline;gap:10px;padding:14px 24px 8px;flex-wrap:wrap}
+.rap-guide-head .g-tag{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:var(--accent);background:var(--accent-soft);padding:3px 10px;border-radius:7px}
+.rap-guide-head .g-title{font-size:13.5px;font-weight:700}
+.rap-guide-head .g-sub{font-size:11.5px;color:var(--ink-faint)}
+.rap-list{display:flex;flex-direction:column}
+.rap-row{display:flex;align-items:center;gap:12px;padding:10px 24px;border-bottom:1px solid var(--border)}
+.rap-row:last-child{border-bottom:none}
+.rap-code{font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:700;color:var(--ink-faint);width:132px;flex-shrink:0}
+.rap-desc{flex:1;min-width:0;font-size:13px;color:var(--ink)}
+.rap-state{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
+.rap-state.ok{background:var(--good-soft);color:var(--good)}
+.rap-state.pending{background:var(--warn-soft);color:var(--warn)}
+.rap-divider{border-top:2px dashed var(--border);margin:4px 24px}
+
+/* ---------- Notes / footer ---------- */
+.notes{font-size:12.5px;color:var(--ink-faint);line-height:1.7;margin-top:12px}
+.notes b{color:var(--ink-dim)}
+footer.src{margin-top:44px;padding-top:20px;border-top:1px solid var(--border);font-size:11.5px;color:var(--ink-faint);line-height:1.85}
+</style>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="ring-wrap">
+      <svg width="132" height="132" viewBox="0 0 132 132">
+        <circle class="ring-track" cx="66" cy="66" r="54"></circle>
+        <circle class="ring-fill" cx="66" cy="66" r="54"
+          stroke-dasharray="339.3" stroke-dashoffset="10.2"></circle>
+      </svg>
+      <div class="ring-center">
+        <div class="big num">97%</div>
+        <div class="small">avance</div>
+      </div>
+    </div>
+    <div class="hero-text">
+      <div class="eyebrow">ADSO · Ficha 3389010 · Fase Planeación</div>
+      <h1>Seguimiento de calificaciones — Guías 3, 4 y 5</h1>
+      <p>Consolidado a partir del reporte oficial de calificaciones descargado el <b>1 de octubre de 2026</b> (Zajuna, columna "Total del curso"). Cubre las 30 evidencias de <b>Guía 3</b> (Algoritmos), <b>Guía 4</b> (Diseño de software) y <b>Guía 5</b> (Prototipo navegable) para los 14 aprendices activos con registro en estas tres guías.</p>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi c-good">
+      <div class="kpi-label">Al 100%</div>
+      <div class="kpi-value num">7</div>
+      <div class="kpi-sub">de 14 aprendices, con las 30 evidencias en orden</div>
+    </div>
+    <div class="kpi c-accent">
+      <div class="kpi-label">Promedio general</div>
+      <div class="kpi-value num">97%</div>
+      <div class="kpi-sub">29.1 de 30 evidencias por aprendiz</div>
+    </div>
+    <div class="kpi c-warn">
+      <div class="kpi-label">En atención</div>
+      <div class="kpi-value num">7</div>
+      <div class="kpi-sub">de 14, con al menos 1 evidencia pendiente</div>
+    </div>
+    <div class="kpi c-warn">
+      <div class="kpi-label">Pendientes totales</div>
+      <div class="kpi-value num">16</div>
+      <div class="kpi-sub">evidencias sin "A" repartidas entre los 7 anteriores</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h2>Avance por guía</h2>
+      <span class="hint">% de aprendices con "A" en cada evidencia, sobre 14</span>
+    </div>
+    <div class="card">
+      <div class="guide-row">
+        <div class="guide-name">Guía 3 <small>Algoritmos · 7 ev.</small></div>
+        <div class="guide-bar-track"><div class="guide-bar-fill" style="width:100%;background:var(--good)"></div></div>
+        <div class="guide-pct" style="color:var(--good)">100%</div>
+        <div class="guide-frac num">98/98</div>
+      </div>
+      <div class="guide-row">
+        <div class="guide-name">Guía 4 <small>Diseño SW · 15 ev.</small></div>
+        <div class="guide-bar-track"><div class="guide-bar-fill" style="width:99%;background:var(--good)"></div></div>
+        <div class="guide-pct" style="color:var(--good)">99%</div>
+        <div class="guide-frac num">208/210</div>
+      </div>
+      <div class="guide-row">
+        <div class="guide-name">Guía 5 <small>Prototipo · 8 ev.</small></div>
+        <div class="guide-bar-track"><div class="guide-bar-fill" style="width:86%;background:var(--warn)"></div></div>
+        <div class="guide-pct" style="color:var(--warn)">86%</div>
+        <div class="guide-frac num">96/112</div>
+      </div>
+    </div>
+    <p class="notes">Guía 3 y Guía 4 están prácticamente cerradas (100% y 99%). La caída a 86% en Guía 5 es esperable porque es la guía en curso — y dentro de ella, EV06-EV08 (usabilidad móvil y XML Android) concentran los pendientes, algo normal a días de haberse cerrado EV08.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h2>Mapa de evidencias — Guía 5</h2>
+      <span class="hint">Evidencia con más rezago: AA1-EV08 (9/14)</span>
+    </div>
+    <div class="card">
+      <div class="ev-grid">
+        <div class="ev-item">
+          <div class="ev-track"><div class="ev-fill" style="height:100%;background:var(--good)"><span>14</span></div></div>
+          <div class="ev-label">EV01</div>
+          <div class="ev-sub">Taller prototipo</div>
+        </div>
+        <div class="ev-item">
+          <div class="ev-track"><div class="ev-fill" style="height:100%;background:var(--good)"><span>14</span></div></div>
+          <div class="ev-label">EV02</div>
+          <div class="ev-sub">Usabilidad apps</div>
+        </div>
+        <div class="ev-item">
+          <div class="ev-track"><div class="ev-fill" style="height:92.9%;background:var(--good)"><span>13</span></div></div>
+          <div class="ev-label">EV03</div>
+          <div class="ev-sub">Interfaz + mapa</div>
+        </div>
+        <div class="ev-item">
+          <div class="ev-track"><div class="ev-fill" style="height:85.7%;background:var(--warn)"><span>12</span></div></div>
+          <div class="ev-label">EV04</div>
+          <div class="ev-sub">Maquetación HTML</div>
+        </div>
+        <div class="ev-item">
+          <div class="ev-track"><div class="ev-fill" style="height:85.7%;background:var(--warn)"><span>12</span></div></div>
+          <div class="ev-label">EV05</div>
+          <div class="ev-sub">Mapa de nav.</div>
+        </div>
+        <div class="ev-item">
+          <div class="ev-track"><div class="ev-fill" style="height:85.7%;background:var(--warn)"><span>12</span></div></div>
+          <div class="ev-label">EV06</div>
+          <div class="ev-sub">Usabilidad móvil</div>
+        </div>
+        <div class="ev-item">
+          <div class="ev-track"><div class="ev-fill" style="height:78.6%;background:var(--warn)"><span>11</span></div></div>
+          <div class="ev-label">EV07</div>
+          <div class="ev-sub">Interfaz móvil</div>
+        </div>
+        <div class="ev-item">
+          <div class="ev-track"><div class="ev-fill" style="height:64.3%;background:var(--bad)"><span>9</span></div></div>
+          <div class="ev-label">EV08</div>
+          <div class="ev-sub">XML Android</div>
+        </div>
+      </div>
+    </div>
+    <p class="notes">EV08 (Maquetación XML Android, la de la Sesión 10) es la más reciente y la que más pendientes acumula — normal a días de haberse cerrado.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h2>Ranking de aprendices</h2>
+      <span class="hint">Ordenado por total de evidencias con "A" sobre 30</span>
+    </div>
+    <div class="card">
+      <div class="roster-scroll">
+        <table class="roster">
+          <thead>
+            <tr>
+              <th style="width:28px"></th>
+              <th>Aprendiz</th>
+              <th class="num">G3</th>
+              <th class="num">G4</th>
+              <th class="num">G5</th>
+              <th class="num">Total</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="rank">1</span></td><td>Luis Giovanni Burbano Lopez</td><td class="num">7/7</td><td class="num">15/15</td><td class="num">8/8</td><td class="num" style="color:var(--good)">30/30</td><td><span class="pill complete"><span class="dot"></span>Completo</span></td></tr>
+            <tr><td><span class="rank">2</span></td><td>Jhonatan Andres Fuentes Agamez</td><td class="num">7/7</td><td class="num">15/15</td><td class="num">8/8</td><td class="num" style="color:var(--good)">30/30</td><td><span class="pill complete"><span class="dot"></span>Completo</span></td></tr>
+            <tr><td><span class="rank">3</span></td><td>Gary William Garcia Torres</td><td class="num">7/7</td><td class="num">15/15</td><td class="num">8/8</td><td class="num" style="color:var(--good)">30/30</td><td><span class="pill complete"><span class="dot"></span>Completo</span></td></tr>
+            <tr><td><span class="rank">4</span></td><td>Juan Fernando Gil Colorado</td><td class="num">7/7</td><td class="num">15/15</td><td class="num">8/8</td><td class="num" style="color:var(--good)">30/30</td><td><span class="pill complete"><span class="dot"></span>Completo</span></td></tr>
+            <tr><td><span class="rank">5</span></td><td>Rachael Valentina Gomez Rivera</td><td class="num">7/7</td><td class="num">15/15</td><td class="num">8/8</td><td class="num" style="color:var(--good)">30/30</td><td><span class="pill complete"><span class="dot"></span>Completo</span></td></tr>
+            <tr><td><span class="rank">6</span></td><td>Josue Gabriel Murcia Olarte</td><td class="num">7/7</td><td class="num">15/15</td><td class="num">8/8</td><td class="num" style="color:var(--good)">30/30</td><td><span class="pill complete"><span class="dot"></span>Completo</span></td></tr>
+            <tr><td><span class="rank">7</span></td><td>Valentina Mena Passo</td><td class="num">7/7</td><td class="num">15/15</td><td class="num">8/8</td><td class="num" style="color:var(--good)">30/30</td><td><span class="pill complete"><span class="dot"></span>Completo</span></td></tr>
+            <tr><td><span class="rank">8</span></td><td>Anderson Jair Arango Arias</td><td class="num">7/7</td><td class="num">15/15</td><td class="num">7/8</td><td class="num" style="color:var(--warn)">29/30</td><td><span class="pill attention"><span class="dot"></span>Atención</span></td></tr>
+            <tr><td><span class="rank">9</span></td><td>Cristian Andres Estrada Gelvis</td><td class="num">7/7</td><td class="num">15/15</td><td class="num">7/8</td><td class="num" style="color:var(--warn)">29/30</td><td><span class="pill attention"><span class="dot"></span>Atención</span></td></tr>
+            <tr><td><span class="rank">10</span></td><td>Juan Fernando Gomez Rojas</td><td class="num">7/7</td><td class="num">15/15</td><td class="num">7/8</td><td class="num" style="color:var(--warn)">29/30</td><td><span class="pill attention"><span class="dot"></span>Atención</span></td></tr>
+            <tr><td><span class="rank">11</span></td><td>Juan Jose Ruiz Bustamante</td><td class="num">7/7</td><td class="num">15/15</td><td class="num">7/8</td><td class="num" style="color:var(--warn)">29/30</td><td><span class="pill attention"><span class="dot"></span>Atención</span></td></tr>
+            <tr><td><span class="rank">12</span></td><td>Darly Falco Medrano</td><td class="num">7/7</td><td class="num">15/15</td><td class="num">6/8</td><td class="num" style="color:var(--warn)">28/30</td><td><span class="pill attention"><span class="dot"></span>Atención</span></td></tr>
+            <tr><td><span class="rank">13</span></td><td>Nikol Dayann Contreras Guerrero</td><td class="num">7/7</td><td class="num">15/15</td><td class="num">4/8</td><td class="num" style="color:var(--warn)">26/30</td><td><span class="pill attention"><span class="dot"></span>Atención</span></td></tr>
+            <tr><td><span class="rank">14</span></td><td>Andrea Carolina Blanco Escobar</td><td class="num">7/7</td><td class="num">13/15</td><td class="num">2/8</td><td class="num" style="color:var(--warn)">22/30</td><td><span class="pill attention"><span class="dot"></span>Atención</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="notes">No aparece en el reporte: <b>Luis Christian Gonzalez Torres</b> — no tiene registro en este archivo de calificaciones para Guía 3, 4 ni 5; vale la pena confirmar en Zajuna si sigue matriculado en la ficha.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h2>Pendientes por aprendiz</h2>
+      <span class="hint">Solo se listan los 7 aprendices con alguna evidencia pendiente</span>
+    </div>
+    <div class="pend-grid">
+      <div class="pend-card">
+        <div class="pend-head"><span class="name">Anderson Jair Arango Arias</span></div>
+        <div class="pend-tags"><span class="tag g5">G5 · AA1-EV06</span></div>
+      </div>
+      <div class="pend-card">
+        <div class="pend-head"><span class="name">Cristian Andres Estrada Gelvis</span></div>
+        <div class="pend-tags"><span class="tag g5">G5 · AA1-EV08</span></div>
+      </div>
+      <div class="pend-card">
+        <div class="pend-head"><span class="name">Juan Fernando Gomez Rojas</span></div>
+        <div class="pend-tags"><span class="tag g5">G5 · AA1-EV08</span></div>
+      </div>
+      <div class="pend-card">
+        <div class="pend-head"><span class="name">Juan Jose Ruiz Bustamante</span></div>
+        <div class="pend-tags"><span class="tag g5">G5 · AA1-EV06</span></div>
+      </div>
+      <div class="pend-card">
+        <div class="pend-head"><span class="name">Darly Falco Medrano</span></div>
+        <div class="pend-tags"><span class="tag g5">G5 · AA1-EV07</span><span class="tag g5">G5 · AA1-EV08</span></div>
+      </div>
+      <div class="pend-card">
+        <div class="pend-head"><span class="name">Nikol Dayann Contreras Guerrero</span></div>
+        <div class="pend-tags"><span class="tag g5">G5 · AA1-EV04</span><span class="tag g5">G5 · AA1-EV05</span><span class="tag g5">G5 · AA1-EV07</span><span class="tag g5">G5 · AA1-EV08</span></div>
+      </div>
+      <div class="pend-card risk">
+        <div class="pend-head"><span class="name">Andrea Carolina Blanco Escobar</span></div>
+        <div class="pend-tags">
+          <span class="tag g4">G4 · AA2-EV03</span><span class="tag g4">G4 · AA2-EV04</span>
+          <span class="tag g5">G5 · AA1-EV03</span><span class="tag g5">G5 · AA1-EV04</span><span class="tag g5">G5 · AA1-EV05</span><span class="tag g5">G5 · AA1-EV06</span><span class="tag g5">G5 · AA1-EV07</span><span class="tag g5">G5 · AA1-EV08</span>
+        </div>
+      </div>
+    </div>
+    <p class="notes">7 aprendices no tienen ninguna evidencia pendiente en G3-G5. Los otros 7 acumulan algo: la mayoría (6) solo le falta cerrar 1-2 evidencias de Guía 5, lo que es alcanzable rápido. Andrea Blanco es la única con pendientes que ya arrastra desde Guía 4, por lo que conviene priorizar su seguimiento.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h2>Resultados de Aprendizaje (RAP) — Fase Análisis y Planeación</h2>
+      <span class="hint">Cruce Guías 1-5 vs. juicios de evaluación en SOFIA Plus · 10 aprobados / 4 pendientes</span>
+    </div>
+    <div class="card">
+      <div class="rap-list">
+
+        <div class="rap-guide-head"><span class="g-tag">Guía 1</span><span class="g-title">Fase Análisis · AP1 — Especificaciones funcionales y metodología</span></div>
+        <div class="rap-row"><span class="rap-code">220501092-01</span><span class="rap-desc">Caracterizar los procesos de la organización</span><span class="rap-state ok">Aprobado</span></div>
+        <div class="rap-row"><span class="rap-code">220501092-02</span><span class="rap-desc">Recolectar información del software a construir</span><span class="rap-state ok">Aprobado</span></div>
+        <div class="rap-row"><span class="rap-code">220501092-03</span><span class="rap-desc">Establecer los requisitos del software</span><span class="rap-state ok">Aprobado</span></div>
+        <div class="rap-row"><span class="rap-code">220501092-04</span><span class="rap-desc">Validar el informe de requisitos</span><span class="rap-state ok">Aprobado</span></div>
+        <div class="rap-row"><span class="rap-code">220501093-01</span><span class="rap-desc">Planear actividades de análisis</span><span class="rap-state ok">Aprobado</span></div>
+
+        <div class="rap-divider"></div>
+        <div class="rap-guide-head"><span class="g-tag">Guía 2</span><span class="g-title">Fase Análisis · AP2 — Modelo conceptual y propuesta técnica</span></div>
+        <div class="rap-row"><span class="rap-code">220501093-02</span><span class="rap-desc">Modelar las funciones del software</span><span class="rap-state ok">Aprobado</span></div>
+        <div class="rap-row"><span class="rap-code">220501093-04</span><span class="rap-desc">Verificar los modelos realizados</span><span class="rap-state ok">Aprobado</span></div>
+        <div class="rap-row"><span class="rap-code">220501094-01</span><span class="rap-desc">Definir especificaciones técnicas</span><span class="rap-state ok">Aprobado</span></div>
+        <div class="rap-row"><span class="rap-code">220501094-02</span><span class="rap-desc">Elaborar propuesta técnica</span><span class="rap-state ok">Aprobado</span></div>
+        <div class="rap-row"><span class="rap-code">220501094-03</span><span class="rap-desc">Validar las condiciones de la propuesta</span><span class="rap-state ok">Aprobado</span></div>
+
+        <div class="rap-divider"></div>
+        <div class="rap-guide-head"><span class="g-tag">Guía 3</span><span class="g-title">Fase Planeación · AP3 — Procesos lógicos y algoritmos</span></div>
+        <div class="rap-row"><span class="rap-code">220501093-03</span><span class="rap-desc">Desarrollar procesos lógicos a través de la implementación de algoritmos</span><span class="rap-state ok">Aprobado</span></div>
+
+        <div class="rap-divider"></div>
+        <div class="rap-guide-head"><span class="g-tag">Guía 4</span><span class="g-title">Fase Planeación · AP4 — Estructura lógica y tecnológica del sistema</span></div>
+        <div class="rap-row"><span class="rap-code">220501095-01</span><span class="rap-desc">Elaborar los artefactos de diseño del software</span><span class="rap-state pending">Por evaluar</span></div>
+        <div class="rap-row"><span class="rap-code">220501095-02</span><span class="rap-desc">Estructurar el modelo de datos del software</span><span class="rap-state pending">Por evaluar</span></div>
+        <div class="rap-row"><span class="rap-code">220501095-04</span><span class="rap-desc">Verificar los entregables de la fase de diseño</span><span class="rap-state pending">Por evaluar</span></div>
+
+        <div class="rap-divider"></div>
+        <div class="rap-guide-head"><span class="g-tag">Guía 5</span><span class="g-title">Fase Planeación · AP5 — Construcción del prototipo del software</span></div>
+        <div class="rap-row"><span class="rap-code">220501095-03</span><span class="rap-desc">Determinar las características técnicas de la interfaz gráfica</span><span class="rap-state pending">Por evaluar</span></div>
+
+      </div>
+    </div>
+    <p class="notes"><b>Fase Análisis (Guías 1-2): completa.</b> Los 10 RAP técnicos de las competencias 220501092, 220501093 (parcial) y 220501094 ya están aprobados en SOFIA Plus.<br>
+    <b>Fase Planeación (Guías 3-5): falta cerrar.</b> 220501093-03 ya está aprobado, pero los 4 RAP de la competencia <b>220501095 "Diseñar la solución de software"</b> (220501095-01, 02, 03 y 04 — toda la Guía 4 y la Guía 5) siguen en estado <b>"Por evaluar"</b> en SOFIA Plus. Registrar juicio en esos 4 cerraría por completo la Fase Planeación.<br>
+    Cruce basado en el reporte <b>SENA SOFIA 30 DE SEPTIEMBRE.xlsx</b> (aprendiz Luis Giovanni Burbano Lopez, CC 87063862) comparando el texto literal de cada RAP contra las guías de aprendizaje 1 a 5; los códigos internos de SOFIA (59xxxx) difieren de los códigos Zajuna pero los nombres de RAP coinciden casi textualmente.</p>
+  </div>
+
+  <footer class="src">
+    Fuente: <b>P_228118_V_3389010_R_41_C_9525 Calificaciones(20).xlsx</b> — reporte oficial de calificaciones Zajuna, columna "Total del curso" (última descarga registrada en el archivo).<br>
+    Guía 3 = GA3-220501093 (AA1-AA3, 7 ev.) · Guía 4 = GA4-220501095 (AA1-AA4, 15 ev.) · Guía 5 = GA5-220501095-AA1 (8 ev.).<br>
+    "Luis Christian Gonzalez Torres" aparece en registros de retroalimentación previos pero no en este reporte de calificaciones — revisar su estado de matrícula en la ficha.<br>
+    Vista limitada a los 14 aprendices con avance activo en G3-G5; a pedido del instructor no se listan aquí los casos con avance crítico (0-1 evidencia entregada).
+  </footer>
+
+</div>
